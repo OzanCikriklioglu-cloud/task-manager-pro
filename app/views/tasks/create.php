@@ -88,7 +88,7 @@ $currentDatetime = date('Y-m-d\\TH:i');
     <form action="create.php" method="post">
         <label for="category_id">Category (optional):</label>
         <select name="category_id" id="category_id">
-            <option value="">— Select —</option>
+            <option value="">Default</option>
             <?php foreach ($categories as $cat): ?>
                 <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
             <?php endforeach; ?>

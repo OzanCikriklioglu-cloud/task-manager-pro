@@ -38,38 +38,6 @@ unset($_SESSION['flash']);
         </div>
     </div>
 
-    <script>
-        const canvas = document.getElementById("matrix-canvas");
-        const ctx = canvas.getContext("2d");
-
-        canvas.height = window.innerHeight;
-        canvas.width = window.innerWidth;
-
-        const letters = "154879623=$#£ABCDEFGHIJKLMNOPQRs̴̢̲̙̝̝̞͉͂̏̃d̵̡̦̝̱̖̙͊̂̎̓͘a̷̛̦͚̯͎̼̝͍̤͑̈̿̚ͅs̵̛̫̹̤̳̮̤̟̀̈́͊ḋ̴̡̛̻̬̱͍̣̊͒̅̍̃͜͝ͅVWXYZ>$<|a̶̡̫̺̙̹̱̬͌̆][%̵͎͊̓͑͗̓̌͝&̸̡̻̋̏͐̑͠";
-        const fontSize = 21;
-        const columns = canvas.width / fontSize;
-        const drops = Array.from({ length: columns }, () => Math.random() * canvas.height);
-
-        function draw() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = "#0F0"; // Neon yeşil
-            ctx.font = fontSize + "px monospace";
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = letters[Math.floor(Math.random() * letters.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
-        }
-
-        setInterval(draw, 60); // Yavaş akış
-    </script>
 
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>

@@ -1,13 +1,13 @@
 <?php
 // MySQL server infos
-$host     = "x"; // your host address
-$dbname   = 'x';  // your database name
+$host     = "127.0.0.1:3307"; // your host address
+$dbname   = 'register';  // your database name
 $charset  = 'utf8mb4';
 
 $dsn      = "mysql:host={$host};dbname={$dbname};charset={$charset}";
 
 $dbUser   = 'root';     // Your xamp username its root at default
-$dbPass   = 'x';  //  your xampp password
+$dbPass   = 'Ozan123456?';  //  your xampp password
 
 $options  = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,

@@ -2,159 +2,154 @@
 // C:\xampp\htdocs\Task_Manager_PRO\app\views\auth\taskmanager.php
 session_start();
 
-// Sayfa önbelleklemesini tamamen kapat
+// Cache disabling
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Cache-Control: post-check=0, pre-check=0', false);
 header('Pragma: no-cache');
 header('Expires: 0');
 
-// Giriş kontrolü: loggedin değilse index.php'ye yönlendir
+// Timezone
+date_default_timezone_set('Europe/Warsaw');
+
+// Auth check
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('Location: /Task_Manager_PRO/public/index.php');
     exit;
 }
-
-// Kullanıcı ID'sini al
 $user_id = $_SESSION['user_id'];
 
-// Filtre parametresini al (all, completed, incomplete)
-$filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
+// Params: filter, sort, order, category
+$filter = $_GET['filter'] ?? 'all';
+$categoryFilter = $_GET['category'] ?? 'all';
+$allowedSorts = ['priority', 'due_date', 'created_at', 'completed_at'];
+$sort  = in_array($_GET['sort'] ?? '', $allowedSorts) ? $_GET['sort'] : 'created_at';
+$order = strtoupper($_GET['order'] ?? 'DESC');
+if (!in_array($order, ['ASC','DESC'])) $order = 'DESC';
 
-// Veritabanı bağlantısı
+// DB
 require 'C:\xampp\htdocs\Task_Manager_PRO\config\connection.php';
+$pdo = new PDO($dsn, $dbUser, $dbPass, $options);
 
-try {
-    $pdo = new PDO($dsn, $dbUser, $dbPass, $options);
-} catch (PDOException $e) {
-    die("Veritabanı bağlantı hatası: " . $e->getMessage());
-}
+// Fetch categories for dropdown
+$catStmt = $pdo->prepare("SELECT DISTINCT c.name FROM categories c
+    JOIN tasks t ON t.category_id=c.id WHERE t.user_id=:user_id");
+$catStmt->execute([':user_id'=>$user_id]);
+$categories = $catStmt->fetchAll(PDO::FETCH_COLUMN);
 
-// SQL sorgusunu oluştur
-$sql = "
-    SELECT t.id, t.title, t.description, t.priority, t.due_date, t.status, t.created_at, t.completed_at,
+// Base SQL
+$sql = "SELECT t.id,t.title,t.description,t.priority,t.due_date,t.status,t.created_at,t.completed_at,
            c.name AS category_name
     FROM tasks t
-    LEFT JOIN categories c ON t.category_id = c.id
-    WHERE t.user_id = :user_id
-";
-
-// Filtre ekle
-if ($filter === 'completed') {
-    $sql .= " AND t.status = 'completed'";
-} elseif ($filter === 'incomplete') {
-    $sql .= " AND t.status = 'incomplete'";
-}
-
-$sql .= " ORDER BY t.created_at DESC";
+    LEFT JOIN categories c ON t.category_id=c.id
+    WHERE t.user_id=:user_id";
+// Status filter
+if ($filter==='completed') $sql .= " AND t.status='completed'";
+elseif ($filter==='incomplete') $sql .= " AND t.status='incomplete'";
+// Category filter
+if ($categoryFilter!=='all') $sql .= " AND c.name=:catName";
+// Order
+$sql .= " ORDER BY t.$sort $order";
 
 $stmt = $pdo->prepare($sql);
-$stmt->execute([':user_id' => $user_id]);
+$params = [':user_id'=>$user_id];
+if ($categoryFilter!=='all') $params[':catName'] = $categoryFilter;
+$stmt->execute($params);
 $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Mark failed
+$now = time();
+foreach ($tasks as &$t) {
+    if ($t['status']!=='completed' && $t['due_date'] && strtotime($t['due_date'])<$now) {
+        $t['status']='failed';
+    }
+}
+unset($t);
 ?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Task Manager</title>
-    <style>
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 8px 12px; border: 1px solid #ddd; }
-        th { background-color: #f4f4f4; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-danger { 
-            background-color: #dc3545; 
-            color: white; 
-            padding: 6px 12px; 
-            text-decoration: none; 
-            border-radius: 4px; 
-        }
-        .btn-danger:hover { opacity: 0.9; }
-        .filters { margin-bottom: 20px; }
-        .filter-btn {
-            display: inline-block;
-            padding: 8px 16px;
-            margin-right: 10px;
-            text-decoration: none;
-            background-color: #f4f4f4;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            color: #333;
-        }
-        .filter-btn:hover {
-            background-color: #e9e9e9;
-        }
-        .active-filter {
-            background-color: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-    </style>
-    <link rel="stylesheet" href="/Task_Manager_PRO/public/Appear/style.css">
+<meta charset="UTF-8">
+<title>Task Manager</title>
+<link rel="stylesheet" href="/Task_Manager_PRO/public/Appear/style.css">
+<style>
+body{font-family:Arial;margin:20px}
+.datetime{text-align:center;color:#555;margin-bottom:10px}
+.header{display:flex;justify-content:space-between;align-items:center}
+.filters{margin:10px 0}
+.filter-btn{padding:6px 12px;margin-right:8px;text-decoration:none;border:1px solid #ddd;border-radius:4px;background:#f4f4f4;color:#333}
+.active-filter{background:#007bff;color:#fff;border-color:#007bff}
+select{padding:6px;border:1px solid #ccc;border-radius:4px;margin-right:20px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{padding:8px;border:1px solid #ddd}
+th{background:#f4f4f4}
+.btn-danger{background:#dc3545;color:#fff;padding:6px 12px;text-decoration:none;border-radius:4px}
+.btn-danger:hover{opacity:0.9}
+</style>
 </head>
 <body>
-    <div class="header">
-        <h1>Task Manager</h1>
-        <!-- Güvenli Logout -->
-        <a href="/Task_Manager_PRO/public/logout.php" class="btn-danger">Çıkış Yap</a>
-    </div>
+<div class="datetime"><?=date('Y-m-d H:i')?></div>
+<div class="header">
+  <h1>Task Manager</h1>
+  <a href="/Task_Manager_PRO/public/logout.php" class="btn-danger">Çıkış Yap</a>
+</div>
 
-    <!-- Filtre butonları -->
-    <div class="filters">
-        <a href="?filter=all" class="filter-btn <?= $filter === 'all' ? 'active-filter' : '' ?>">Hepsi</a>
-        <a href="?filter=completed" class="filter-btn <?= $filter === 'completed' ? 'active-filter' : '' ?>">Bitirilmiş</a>
-        <a href="?filter=incomplete" class="filter-btn <?= $filter === 'incomplete' ? 'active-filter' : '' ?>">Bitirilmemiş</a>
-    </div>
+<!-- Category Filter -->
+<div class="filters">
+  <label>Kategori:</label>
+  <select onchange="location.href='?filter=<?=$filter?>&sort=<?=$sort?>&order=<?=$order?>&category='+this.value">
+    <option value="all" <?=$categoryFilter==='all'?'selected':''?>>Tümü</option>
+    <?php foreach($categories as $cat): ?>
+      <option value="<?=htmlspecialchars($cat)?>" <?=$categoryFilter===$cat?'selected':''?>><?=htmlspecialchars($cat)?></option>
+    <?php endforeach; ?>
+  </select>
 
-    <p><a href="/Task_Manager_PRO/app/views/tasks/create.php">Yeni Görev Ekle</a></p>
+  <!-- Existing filters -->
+  <a href="?filter=all&sort=<?=$sort?>&order=<?=$order?>&category=<?=$categoryFilter?>" class="filter-btn <?= $filter==='all'?'active-filter':''?>">Hepsi</a>
+  <a href="?filter=completed&sort=<?=$sort?>&order=<?=$order?>&category=<?=$categoryFilter?>" class="filter-btn <?= $filter==='completed'?'active-filter':''?>">Bitirilen</a>
+  <a href="?filter=incomplete&sort=<?=$sort?>&order=<?=$order?>&category=<?=$categoryFilter?>" class="filter-btn <?= $filter==='incomplete'?'active-filter':''?>">Bitirilmemiş</a>
+</div>
 
-    <?php if (count($tasks) === 0): ?>
-        <p>Henüz hiçbir görev eklenmemiş.</p>
-    <?php else: ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Başlık</th>
-                    <th>Açıklama</th>
-                    <th>Kategori</th>
-                    <th>Öncelik</th>
-                    <th>Durum</th>
-                    <th>Son Tarih</th>
-                    <th>Oluşturulma</th>
-                    <th>Tamamlanma</th>
-                    <th>İşlemler</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($tasks as $task): ?>
-                    <tr>
-                        <td><?= $task['id'] ?></td>
-                        <td><?= htmlspecialchars($task['title']) ?></td>
-                        <td><?= nl2br(htmlspecialchars($task['description'])) ?></td>
-                        <td><?= htmlspecialchars($task['category_name'] ?? 'Yok') ?></td>
-                        <td style="color: <?= 
-                            $task['priority'] === 'low' ? 'green' : (
-                            $task['priority'] === 'medium' ? 'orange' : 'red') 
-                        ?>;">
-                            <?= ucfirst($task['priority']) ?>
-                        </td>
-                        <td><?= ucfirst(str_replace('_', ' ', $task['status'])) ?></td>
-                        <td><?= $task['due_date'] ? date('Y-m-d H:i', strtotime($task['due_date'])) : '-' ?></td>
-                        <td><?= date('Y-m-d H:i', strtotime($task['created_at'])) ?></td>
-                        <td><?= $task['completed_at'] ? date('Y-m-d H:i', strtotime($task['completed_at'])) : '-' ?></td>
-                        <td>
-                            <a href="edit.php?id=<?= $task['id'] ?>">Düzenle</a> |
-                            <a href="delete.php?id=<?= $task['id'] ?>" onclick="return confirm('Silmek istediğinize emin misiniz?');">Sil</a>
-                            
-                            <?php if($task['status'] === 'incomplete'): ?>
-                                | <a href="complete_task.php?id=<?= $task['id'] ?>&filter=<?= $filter ?>" class="complete-link">Tamamla</a>
-                            <?php endif; ?>
-                        </td>
-                      
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
+<!-- Sort Buttons -->
+<div class="filters">
+  <span>Sırala:</span>
+  <?php foreach(['priority'=>'Öncelik','created_at'=>'Oluşturma','due_date'=>'Bitiş'] as $col=>$label): ?>
+    <a href="?filter=<?=$filter?>&sort=<?=$col?>&order=<?= $sort===$col&&$order==='ASC'?'DESC':'ASC'?>&category=<?=$categoryFilter?>"
+       class="filter-btn <?= $sort===$col?'active-filter':''?>">
+      <?=$label?> <?= $sort===$col?($order==='ASC'?'↑':'↓'):''?>
+    </a>
+  <?php endforeach; ?>
+</div>
+
+<a href="/Task_Manager_PRO/app/views/tasks/create.php">Yeni Görev Ekle</a>
+
+<?php if(empty($tasks)): ?>
+  <p>Henüz görev yok.</p>
+<?php else: ?>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Başlık</th><th>Açıklama</th><th>Kategori</th><th>Öncelik</th><th>Durum</th><th>Son Tarih</th><th>İşlemler</th></tr>
+    </thead>
+    <tbody>
+      <?php $i=1; foreach($tasks as $t): ?>
+      <tr>
+        <td><?=$i++?></td>
+        <td><?=htmlspecialchars($t['title'])?></td>
+        <td><?=nl2br(htmlspecialchars($t['description']))?></td>
+        <td><?=htmlspecialchars($t['category_name']?:'Default')?></td>
+        <td style="color: <?= $t['priority']==='low' ? 'green' : ($t['priority']==='medium'? 'orange':'red') ?>;">
+            <?= ucfirst($t['priority']) ?>
+        </td>
+        <td><?=ucfirst(str_replace('_',' ',$t['status']))?></td>
+        <td><?= $t['due_date']?date('Y-m-d H:i',strtotime($t['due_date'])):'-'?></td>
+        <td>
+          <a href="../tasks/view.php?id=<?=$t['id']?>&filter=<?=$filter?>">Görüntüle</a> |
+          <a href="edit.php?id=<?=$t['id']?>">Düzenle</a> |
+          <a href="delete.php?id=<?=$t['id']?>" onclick="return confirm('Silinsin mi?')">Sil</a>
+        </td>
+      </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+<?php endif; ?>
 </body>
 </html>
