@@ -10,6 +10,7 @@ unset($_SESSION['flash']);
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Register</title>
@@ -32,7 +33,7 @@ unset($_SESSION['flash']);
         <div class="container">
             <h1 class="mb-4" style="color:rgb(209, 15, 15);">Welcome to Task Manager Pro</h1>
             <div class="btn-group">
-                <a href="/Task_Manager_PRO/app/views/auth/login.php" class="btn btn-primary btn-lg px-4" >Login</a>
+                <a href="/Task_Manager_PRO/app/views/auth/login.php" class="btn btn-primary btn-lg px-4" style="margin-right: 5px;margin-left: 390px;" >Login</a>
                 <a href="/Task_Manager_PRO/app/views/auth/register.php" class="btn btn-outline-primary btn-lg px-4">Sign Up</a>
             </div>
         </div>

@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 <!doctype html>
 <html lang="en">
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Login - Retro</title>
     <link rel="stylesheet" href="/Task_Manager_PRO/public/Appear/style.css">

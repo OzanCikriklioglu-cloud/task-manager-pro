@@ -17,6 +17,8 @@ $input = [
     'email'    => ''
 ];
 
+$successMessage = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
         $errors['general'] = 'Invalid action. Please try again';
@@ -47,10 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
 
         if (empty(array_filter($errors))) {
             try {
-                require 'C:\xampp\htdocs\Task_Manager_PRO\config\connection.php';
+                // DÜZELTİLMİŞ DOSYA YOLU
+                require dirname(__DIR__, 3) . '/config/connection.php';
+                
                 $pdo = new PDO($dsn, $dbUser, $dbPass, [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false
                 ]);
 
                 // Check for existing email
@@ -69,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
                         ':p' => password_hash($passwordRaw, PASSWORD_DEFAULT)
                     ]);
 
-                    // ===== Add default categories for the new user =====
+                    // Add default categories
                     $newUserId = $pdo->lastInsertId();
                     $defaultCategories = ['Work', 'School', 'Shopping', 'Personal'];
                     $stmtCat = $pdo->prepare("INSERT INTO categories (user_id, name) VALUES (:uid, :name)");
@@ -79,15 +84,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
                             ':name' => $catName
                         ]);
                     }
-                    // ================================================
 
-                    // Registration successful
-                    $_SESSION['flash'] = 'Registration successful!';
-                    header('Location: C:\xampp\htdocs\Task_Manager_PRO\public\index.php');
-                    exit;
+                    $successMessage = 'Registration successful!';
+                    $input = ['username' => '', 'email' => '']; // Clear form
                 }
-            } catch (PDOException $ex) {
-                $errors['general'] = 'Problem occurred.';
+            } catch (\PDOException $e) {
+                $errors['general'] = 'Database error: ' . $e->getMessage();
+            } catch (\Exception $e) {
+                $errors['general'] = 'Error: ' . $e->getMessage();
             }
         }
     }
@@ -100,6 +104,7 @@ unset($_SESSION['flash']);
 <!doctype html>
 <html>
 <head>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Register</title>
@@ -111,6 +116,11 @@ unset($_SESSION['flash']);
     <?php if ($flash): ?>
       <div class="alert alert-success"><?= htmlspecialchars($flash) ?></div>
     <?php endif; ?>
+    
+    <?php if ($successMessage): ?>
+      <div class="alert alert-success"><?= htmlspecialchars($successMessage) ?></div>
+    <?php endif; ?>
+    
     <?php if ($errors['general']): ?>
       <div class="alert alert-danger"><?= htmlspecialchars($errors['general']) ?></div>
     <?php endif; ?>
@@ -150,7 +160,7 @@ unset($_SESSION['flash']);
         <div class="invalid-feedback"><?= htmlspecialchars($errors['password']) ?></div>
       </div>
 
-      <button type="submit" name="register" class="btn btn-primary btn-block">
+      <button type="submit" name="register" class="btn btn-primary btn-block" style="margin-bottom: 10px; margin-top: 10px">
         Register
       </button>
     </form>

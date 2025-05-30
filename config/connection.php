@@ -1,7 +1,7 @@
 <?php
 // MySQL server infos
 $host     = "127.0.0.1:3307"; // your host address
-$dbname   = 'register';  // your database name
+$dbname   = 'task_manager_pro';  // your database name
 $charset  = 'utf8mb4';
 
 $dsn      = "mysql:host={$host};dbname={$dbname};charset={$charset}";

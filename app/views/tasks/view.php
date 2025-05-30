@@ -29,26 +29,48 @@ if (!$task) {
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Görev Detayı</title>
-    <link rel="stylesheet" href="/Task_Manager_PRO/public/Appear/style.css">
+    <link rel="stylesheet" href="/Task_Manager_PRO/public/Appear/viewStyle.css">
 </head>
 <body>
-    <h1>Görev Detayı</h1>
-    <p><strong>ID:</strong> <?= $task['id'] ?></p>
-    <p><strong>Başlık:</strong> <?= htmlspecialchars($task['title']) ?></p>
-    <p><strong>Açıklama:</strong><br><?= nl2br(htmlspecialchars($task['description'])) ?></p>
-    <p><strong>Kategori:</strong> <?= htmlspecialchars($task['category_name'] ?? 'Yok') ?></p>
-    <p><strong>Öncelik:</strong> <?= ucfirst($task['priority']) ?></p>
-    <p><strong>Durum:</strong> <?= ucfirst(str_replace('_',' ',$task['status'])) ?></p>
-    <p><strong>Son Tarih:</strong> <?= $task['due_date'] ? date('Y-m-d H:i', strtotime($task['due_date'])) : '-' ?></p>
-    <p><strong>Oluşturulma:</strong> <?= date('Y-m-d H:i', strtotime($task['created_at'])) ?></p>
-    <p><strong>Tamamlanma:</strong> <?= $task['completed_at'] ? date('Y-m-d H:i', strtotime($task['completed_at'])) : '-' ?></p>
+    <div class="task-detail-container">
+        <h1>Görev Detayları</h1>
+        
+        <div class="detail-item">
+            <strong>📌 Başlık</strong>
+            <p><?= htmlspecialchars($task['title']) ?></p>
+        </div>
+    
 
-    <p>
+        <div class="detail-item">
+            <strong>📝 Açıklama</strong>
+            <p><?= nl2br(htmlspecialchars($task['description'])) ?></p>
+        </div>
+
+        <div class="detail-item">
+            <strong>🏷 Kategori</strong>
+            <p class="category-highlight">
+                <?= htmlspecialchars($task['category_name'] ?? '📦 Kategorisiz') ?>
+            </p>
+        </div>
+        <div class="detail-item">
+            <strong>📅 Tarih</strong>
+            <p style="color: <?= $task['status'] === 'completed' ? '#2ECC40' : '#FF4136' ?>;">
+                <?php if($task['status'] === 'completed'): ?>
+                    ✅ Tamamlandı: <?= date('Y-m-d H:i', strtotime($task['completed_at'])) ?>
+                <?php else: ?>
+                    ⏳ Son Tarih: <?= $task['due_date'] ? date('Y-m-d H:i', strtotime($task['due_date'])) : 'Belirtilmemiş' ?>
+                <?php endif; ?>
+            </p>
+        </div>
+
+        <!-- Diğer alanlar aynı .detail-item class'ı ile devam edecek -->
+        
         <a href="../auth/taskmanager.php?filter=<?= htmlspecialchars($_GET['filter'] ?? 'all') ?>">
-            Geri Dön
+            ◀️ Geri Dön
         </a>
-    </p>
+    </div>
 </body>
 </html>

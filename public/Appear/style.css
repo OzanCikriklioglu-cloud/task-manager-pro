@@ -1,144 +1,228 @@
-/* Early 2000s Dark Blue Theme */
+/* Super Mario Inspired Playful Retro Theme */
+:root {
+  --red: #E71A1A;
+  --blue: #3C78D8;
+  --yellow: #FFD700;
+  --green: #2ECC40;
+  --beige: #FFF5D7;
+  --brown: #6B4423;
+}
+
 body {
-    background-color: #6d6da2;
-    color: #C0C0C0;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px;
-    margin: 0;
-    padding: 20px;
-    line-height: 1.5;
+  background: repeating-linear-gradient(
+    45deg,
+    #FFF0D9,
+    #FFF0D9 20px,
+    #FFE8C8 20px,
+    #FFE8C8 40px
+  );
+  color: var(--brown);
+  font-family: 'Comic Neue', cursive;
+  font-size: 18px;
+  line-height: 1.6;
+  padding: 20px;
 }
 
-html {
-    background-color: #2929af; /* Body ile aynı renk */
+header {
+  background: var(--red);
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 5px 5px 0 var(--brown);
+  margin-bottom: 2rem;
 }
-
-.hero-section {
-    background-color: #000044;
-    border: 3px solid #3366FF;
-    padding: 20px;
-    margin: 20px 0;
-    text-align: center;
-}
-
 
 h1, h2, h3 {
-    color: #00FFFF;
-    font-family: 'Courier New', Courier, monospace;
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+  font-family: 'Press Start 2P', cursive;
+  color: white;
+  text-shadow: 3px 3px 0 var(--brown);
+  margin: 1rem 0;
 }
 
 h1 {
-    font-size: 28px;
-    border-bottom: 2px solid #3366FF;
-    padding-bottom: 10px;
+  font-size: 2.5rem;
+  position: relative;
+  display: inline-block;
 }
 
-a {
-    color: #00FF00;
-    text-decoration: none;
+h1::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--yellow);
+  border-radius: 2px;
 }
 
-a:hover {
-    color: #00FFFF;
-    text-decoration: underline;
+.task-list {
+  background: white;
+  border: 4px solid var(--brown);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
 }
 
-.btn, button {
-    background-color: #000066;
-    border: 2px solid #3366FF;
-    color: #00FF00;
-    padding: 8px 20px;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    cursor: pointer;
-    margin: 5px;
+.btn {
+  background: var(--blue);
+  color: white!important;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 30px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 14px;
+  text-shadow: 2px 2px 0 var(--brown);
+  transition: all 0.2s ease;
+  position: relative;
+  cursor: pointer;
 }
 
-.btn:hover, button:hover {
-    background-color: #000088;
-    border-color: #00FFFF;
-    color: #FFFFFF;
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 4px 4px 0 var(--brown);
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border: 2px dashed var(--yellow);
+  border-radius: 35px;
+  opacity: 0.5;
+}
+
+.task-item {
+  background: white;
+  border-left: 12px solid var(--green);
+  margin: 1rem 0;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.task-item::before {
+  content: "🕹";
+  font-size: 24px;
+  margin-right: 10px;
 }
 
 .form-control {
-    background-color: #000022;
-    border: 1px solid #3366FF;
-    color: #00FF00;
-    padding: 6px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
+  background: white;
+  border: 3px solid var(--brown);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 18px;
+  font-family: 'Comic Neue', cursive;
 }
 
-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 20px 0;
-    border: 2px solid #3366FF;
+.form-control:focus {
+  outline: 3px solid var(--yellow);
+  box-shadow: 3px 3px 0 var(--brown);
 }
 
-th {
-    background-color: #000044;
-    color: #00FFFF;
-    padding: 10px;
-    border: 1px solid #3366FF;
-    font-family: 'Courier New', Courier, monospace;
+.pixel-art-border {
+  position: relative;
 }
 
-td {
-    background-color: #000033;
-    color: #C0C0C0;
-    padding: 8px;
-    border: 1px solid #3366FF;
+.pixel-art-border::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  border: 3px solid var(--red);
+  border-radius: 15px;
+  z-index: -1;
 }
 
-.alert {
-    background-color: #000044;
-    border: 2px solid #3366FF;
-    padding: 15px;
-    margin: 15px 0;
-    color: #00FF00;
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    /* Canlı yeşil çizgiler */
+    repeating-linear-gradient(
+      -45deg,
+      rgba(139, 195, 74, 0.25)   /* Açık yeşil */,
+      rgba(139, 195, 74, 0.25) 12px,
+      rgba(76, 175, 80, 0.35) 12px,  /* Koyu yeşil */
+      rgba(76, 175, 80, 0.35) 24px
+    ),
+    /* Kağıt dokusu */
+    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEXu7u7////19fX5+fn8/Pzr6+vy8vLt7e3v7+/29vbw8PDj4+Pn5+fo6Ojq6ur39/fm5ubx8fHl5eXp6enm5ube3t7s7Oz09PTi4uLf39/g4ODX19cRPzKHAAAAG3RSTlMAQIC/v7+/v79gv8C/v2C/wL+/YL+/YCCoW9xMAAABUklEQVR4Xr3V13KDMBRF0QMEQvTee+/7H5kQCDaOk9j5Z8usC0fS1tGKqFbValX/1g5SbAcptoMU20GK7SDFdpBiO0ixHaTYDlJsBym2gxTbQYrtIMV2kGI7SLEdpNgOUmwHKbaDFNtBiu0gxXaQYjtIsR2k2A5SbAcptoMU20GK7SDFdpBiO0ixHaTYDlJsBym2gxTbQYrtIMV2kGI7SLEdpNgOUmwHKbaDFNtBiu0gxXaQYjtIsR2k2A5SbAcptoMU20GK7SDFdpBiO0ixHaTYDlJsBym2gxTbQYrtIMV2kGI7SLEdpNgOUmwHKbaDFNtBiu0gxXaQYjtIsR2k2A5SbAcptoMU20GK7SDFdpBiO0ixHaTYDlJsBym2gxTbQYrtIMV2kGI7SLEdpNgOUmwHKbaDFNtBiu0gxXaQYjtIsV/YyB3E4kI4dCqQ6wAAAABJRU5ErkJggg=='),
+    /* Ana zemin rengi */
+    #bed35e;
+  
+  background-blend-mode: 
+    soft-light,
+    overlay;
+  
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: -1;
+}
+/* Responsive Tasarım */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+/* Özel Table Stili */
+.task-table {
+  background: #FFF5E1; /* Krem rengi arka plan */
+  border: 3px solid #6B4423; /* Kahverengi çerçeve */
+  border-radius: 15px; /* Yuvarlak köşeler */
+  overflow: hidden;
+  box-shadow: 5px 5px 0 rgba(107, 68, 35, 0.2); /* Gölge efekti */
+  margin: 20px 0;
 }
 
-.alert-success {
-    border-color: #00FF00;
-    color: #00FF00;
+.task-table thead {
+  background: #E71A1A !important; /* Mario kırmızısı */
+  color: white !important;
 }
 
-.alert-danger {
-    border-color: #FF0000;
-    color: #FF0000;
+.task-table th {
+  font-family: 'Press Start 2P', cursive !important;
+  padding: 15px !important;
+  border-bottom: 3px solid #6B4423 !important;
 }
 
-.invalid-feedback {
-    color: #FF4444;
-    font-size: 12px;
-    font-style: italic;
+.task-table td {
+  background: #FFF9F0 !important; /* Açık krem */
+  padding: 12px !important;
+  border-color: #E8D5B5 !important; /* Açık kahverengi */
 }
 
-form {
-    background-color: #000022;
-    border: 2px solid #3366FF;
-    padding: 20px;
-    margin: 20px 0;
-    max-width: 500px;
+.task-table tr:nth-child(even) td {
+  background: #FFEED6 !important; /* Çizgili efekt için alternatif renk */
 }
 
-textarea {
-    background-color: #000011;
-    border: 1px solid #3366FF;
-    color: #00FF00;
-    padding: 5px;
-    width: 100%;
-    font-family: 'Courier New', Courier, monospace;
+.task-table a {
+  color: #3C78D8 !important; /* Mavi linkler */
+  text-decoration: underline !important;
 }
 
-input[type="datetime-local"] {
-    color-scheme: dark;
+.task-table a:hover {
+  color: #E71A1A !important; /* Hover'da kırmızı */
 }
 
-
-@keyframes scan {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(100%); }
-}
+/* Öncelik renkleri */
+.task-table td[style*="color: green"] { color: #2ECC40 !important; } /* Canlı yeşil */
+.task-table td[style*="color: orange"] { color: #FF851B !important; } /* Parlak turuncu */
+.task-table td[style*="color: red"] { color: #FF4136 !important; } /* Canlı kırmızı */

@@ -1,0 +1,114 @@
+
+    /* View Page Özel Stili */
+    body {
+        background: #FFF0D9 !important;
+        padding: 20px;
+    }
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            repeating-linear-gradient(
+                -45deg,
+                rgba(139, 195, 74, 0.25),
+                rgba(139, 195, 74, 0.25) 12px,
+                rgba(76, 175, 80, 0.35) 12px,
+                rgba(76, 175, 80, 0.35) 24px
+            ),
+            url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEXu7u7////19fX5+fn8/Pzr6+vy8vLt7e3v7+/29vbw8PDj4+Pn5+fo6Ojq6ur39/fm5ubx8fHl5eXp6enm5ube3t7s7Oz09PTi4uLf39/g4ODX19cRPzKHAAAAG3RSTlMAQIC/v7+/v79gv8C/v2C/wL+/YL+/YCCoW9xMAAABUklEQVR4Xr3V13KDMBRF0QMEQvTee+/7H5kQCDaOk9j5Z8usC0fS1tGKqFbValX/1g5SbAcptoMU20GK7SDFdpBiO0ixHaTYDlJsBym2gxTbQYrtIMV2kGI7SLEdpNgOUmwHKbaDFNtBiu0gxXaQYjtIsR2k2A5SbAcptoMU20GK7SDFdpBiO0ixHaTYDlJsBym2gxTbQYrtIMV2kGI7SLEdpNgOUmwHKbaDFNtBiu0gxXaQYjtIsR2k2A5SbAcptoMU20GK7SDFdpBiO0ixHaTYDlJsBym2gxTbQYrtIMV2kGI7SLEdpNgOUmwHKbaDFNtBiu0gxXaQYjtIsR2k2A5SbAcptoMU20GK7SDFdpBiO0ixHaTYDlJsBym2gxTbQYrtIMV2kGI7SLEdpNgOUmwHKbaDFNtBiu0gxXaQYjtIsV/YyB3E4kI4dCqQ6wAAAABJRU5ErkJggg=='),
+            #bed35e;
+        background-blend-mode: soft-light, overlay;
+        opacity: 0.6;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .task-detail-container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 30px;
+        background: #FFF9F0;
+        border: 4px solid #6B4423;
+        border-radius: 20px;
+        box-shadow: 8px 8px 0 rgba(107, 68, 35, 0.2);
+    }
+
+    h1 {
+        font-family: 'Press Start 2P', cursive !important;
+        color: #E71A1A !important;
+        text-shadow: 3px 3px 0 #6B4423;
+        font-size: 2.5rem !important;
+        margin-bottom: 40px !important;
+        text-align: center;
+    }
+
+    .detail-item {
+        margin: 25px 0;
+        padding: 20px;
+        background: white;
+        border-left: 12px solid #3C78D8;
+        border-radius: 10px;
+        box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+    }
+
+    .detail-item strong {
+        display: block;
+        font-family: 'Press Start 2P', cursive;
+        color: #6B4423;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .detail-item p {
+        font-family: 'Comic Neue', cursive;
+        font-size: 1.3rem;
+        line-height: 1.6;
+        color: #4A4A4A;
+        margin: 0;
+    }
+
+    .category-highlight {
+        font-size: 2rem !important;
+        color: #2ECC40 !important;
+        text-shadow: 2px 2px 0 #6B4423;
+        padding: 15px;
+        border: 3px dashed #6B4423;
+        display: inline-block;
+        margin: 20px 0;
+    }
+
+    a {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 15px 30px;
+        background: #3C78D8;
+        color: white !important;
+        border-radius: 30px;
+        font-family: 'Press Start 2P', cursive;
+        text-decoration: none !important;
+        transition: all 0.2s;
+    }
+
+    a:hover {
+        transform: translateY(-3px);
+        box-shadow: 4px 4px 0 #6B4423;
+    }
+
+    @media (max-width: 768px) {
+        .task-detail-container {
+            padding: 15px;
+            margin: 20px;
+        }
+        
+        h1 {
+            font-size: 1.8rem !important;
+        }
+        
+        .detail-item {
+            padding: 15px;
+        }
+    }
